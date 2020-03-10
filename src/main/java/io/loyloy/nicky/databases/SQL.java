@@ -216,10 +216,7 @@ public abstract class SQL
 
     public void removeFromCache( String uuid )
     {
-        if( cache.containsKey( uuid ) )
-        {
-            cache.remove( uuid );
-        }
+        cache.remove( uuid );
     }
 
     public void uploadNick( String uuid, String nick, String name )

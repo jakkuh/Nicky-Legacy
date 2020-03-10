@@ -24,7 +24,7 @@ public class NickyCommand implements CommandExecutor
         commands.add( new NickyReloadCommand( plugin ) );
     }
 
-    public boolean onCommand( CommandSender sender, Command arg1, String arg2, String args[] )
+    public boolean onCommand(CommandSender sender, Command arg1, String arg2, String[] args)
     {
         String subCommand = "help";
 

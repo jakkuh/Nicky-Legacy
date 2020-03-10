@@ -2,6 +2,7 @@ package io.loyloy.nicky.commands;
 
 import io.loyloy.nicky.Nick;
 import io.loyloy.nicky.Nicky;
+import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -143,12 +144,32 @@ public class NickCommand implements CommandExecutor
         }
     }
 
+    private boolean canUse(UUID uuid) {
+        if(Nicky.cooldown.containsKey(uuid)) {
+            Long now = System.currentTimeMillis();
+            Long exp = Nicky.cooldown.get(uuid);
+            if(now >= exp) {
+                Nicky.cooldown.remove(uuid);
+                Nicky.cooldown.put(uuid, (System.currentTimeMillis()+(1000*plugin.getConfig().getInt("nickcooldown"))));
+                return true;
+            } else {
+                return false;
+            }
+        }
+        Nicky.cooldown.put(uuid, (System.currentTimeMillis()+(1000*plugin.getConfig().getInt("nickcooldown"))));
+        return true;
+    }
+
     private void runAsPlayer( CommandSender sender, String[] args )
     {
         Player player = (Player) sender;
 
         if( sender.hasPermission( "nicky.set" ) )
         {
+            if(!canUse(player.getUniqueId()) && !player.hasPermission("nicky.cooldownbypass")) {
+                player.sendMessage(Nicky.getPrefix() + ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("cooldown")).replace("{nickcooldown}", plugin.getConfig().getString("nickcooldown")));
+                return;
+            }
             if( args.length >= 1 )
             {
                 String nickname = args[0];
@@ -163,6 +184,11 @@ public class NickCommand implements CommandExecutor
                 if( strippedNickname.length() < Nicky.getMinLength() )
                 {
                     player.sendMessage( Nicky.getPrefix() + ChatColor.RED + "Your nick must be at least " + ChatColor.YELLOW + Nicky.getMinLength() + ChatColor.RED + " characters!" );
+                    return;
+                }
+
+                if(strippedNickname.length() >= 3 && !strippedNickname.substring(0, 3).equalsIgnoreCase(player.getName().substring(0, 3)) && !player.hasPermission("nicky.fthreebypass")) {
+                    player.sendMessage(Nicky.getPrefix() + ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("three_letters_not_met")));
                     return;
                 }
 
