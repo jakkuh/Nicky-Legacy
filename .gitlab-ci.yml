@@ -1,0 +1,6 @@
+include:
+  - project: 'lmg-mc/ci-tasks'
+    file: 'ci_tasks.yml'
+
+build:
+  extends: .build

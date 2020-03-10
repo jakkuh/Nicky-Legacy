@@ -22,3 +22,11 @@ Permissions
 
     Allow nicknames to have color.
     nicky.color
+    or
+    nicky.color.CODE (ex: nicky.color.a would allow &a)
+    
+    Bypass nickname cooldown.
+    nicky.cooldownbypass
+    
+    Bypass requiring the first 3 letters of your nickname to be the same as your username
+    nicky.fthreebypass
